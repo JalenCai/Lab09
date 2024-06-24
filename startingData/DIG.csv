@@ -1,0 +1,12 @@
+df = pd.read_csv('https://drive.google.com/uc?export=download&id=1M0ZFQ09JPZGPm0cVJ0gXwENSgwf84cd2')
+df.to_csv('DIG.csv', index=False)
+columnsOfInterest=['AGE', 'RACE', 'SEX', 'EJF_PER', 'CREAT', 'KLEVEL', 'CHFDUR', 'CHFETIOL', 'PREVMI', 'DIABETES', 'HYPERTEN', 'DIGDOSE', 'CVD', 'WHF', 'DIG', 'HOSP', 'NHOSP', 'DEATH', 'REASON']
+df_reduced=df[columnsOfInterest].dropna(subset=['KLEVEL', 'CHFDUR'])
+df_reduced_cleaned=df_reduced.fillna('Not Given')
+df_reduced_cleaned['DIABETES'] = pd.to_numeric(df_reduced_cleaned['DIABETES'], errors='coerce')
+df_reduced_cleaned['HYPERTEN'] = pd.to_numeric(df_reduced_cleaned['HYPERTEN'], errors='coerce')
+df_reduced_cleaned['DIABETES_AND_HYPERTEN'] = df_reduced_cleaned['DIABETES'] + df_reduced_cleaned['HYPERTEN']
+df_reduced_cleaned['DIABETES_AND_HYPERTEN'] = 0
+df_reduced_cleaned.loc[(df_reduced_cleaned['DIABETES'] == 1) & (df_reduced_cleaned['HYPERTEN'] == 1), 'DIABETES_AND_HYPERTEN'] = 1
+df_reduced_cleaned.to_csv('DIG.csv', index=False)
+df_reduced_cleaned
